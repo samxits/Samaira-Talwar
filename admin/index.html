@@ -503,7 +503,7 @@ async function loadExp(type) {
   const tbody = document.getElementById(type === 'work' ? 'work-tbody' : 'vol-tbody');
   tbody.innerHTML = _exp[type].map(e => `
     <tr>
-      <td>${e.org}</td><td>${e.role}</td><td>${e.date_str}</td>
+      <td>${e.org}</td><td>${e.role}</td><td>${e.date_range}</td>
       <td>${e.is_current ? '<span class="badge badge-green">NOW</span>' : ''}</td>
       <td><div class="td-actions">
         <button class="btn btn-sm btn-ghost" onclick="editExp('${e.id}','${type}')">Edit</button>
@@ -519,7 +519,7 @@ function expForm(e = {}) {
       <div class="form-group"><label>Role / Title</label><input id="m-role" value="${(e.role||'').replace(/"/g,'&quot;')}" /></div>
     </div>
     <div class="form-row cols-2">
-      <div class="form-group"><label>Date range</label><input id="m-dates" value="${e.date_str||''}" placeholder="Jan 2024 – Present" /></div>
+      <div class="form-group"><label>Date range</label><input id="m-dates" value="${e.date_range||''}" placeholder="Jan 2024 – Present" /></div>
       <div class="form-group"><label>Current?</label><select id="m-current"><option value="false" ${!e.is_current?'selected':''}>No</option><option value="true" ${e.is_current?'selected':''}>Yes (shows NOW)</option></select></div>
     </div>
     <div class="form-row"><div class="form-group"><label>Description</label><textarea id="m-desc" rows="4"></textarea></div></div>
@@ -538,7 +538,7 @@ function editExp(id, type) { openExpModal(type, id); }
 
 async function saveExp(type, id) {
   const tags = document.getElementById('m-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-  const payload = { org: document.getElementById('m-org').value, role: document.getElementById('m-role').value, date_str: document.getElementById('m-dates').value, is_current: document.getElementById('m-current').value === 'true', description: document.getElementById('m-desc').value, tags, sort_order: parseInt(document.getElementById('m-sort').value)||0, exp_type: type };
+  const payload = { org: document.getElementById('m-org').value, role: document.getElementById('m-role').value, date_range: document.getElementById('m-dates').value, is_current: document.getElementById('m-current').value === 'true', description: document.getElementById('m-desc').value, tags, sort_order: parseInt(document.getElementById('m-sort').value)||0, exp_type: type };
   const { error } = id ? await db.from('experience').update(payload).eq('id', id) : await db.from('experience').insert(payload);
   if (error) { toast('Error: ' + error.message, 'error'); return; }
   toast('✓ Saved!'); closeModal(); loadExp(type);
