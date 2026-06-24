@@ -523,7 +523,7 @@ function expForm(e = {}) {
       <div class="form-group"><label>Current?</label><select id="m-current"><option value="false" ${!e.is_current?'selected':''}>No</option><option value="true" ${e.is_current?'selected':''}>Yes (shows NOW)</option></select></div>
     </div>
     <div class="form-row"><div class="form-group"><label>Description</label><textarea id="m-desc" rows="4"></textarea></div></div>
-    <div class="form-row"><div class="form-group"><label>Tags (comma separated)</label><input id="m-tags" value="${(e.tags||[]).join(', ')}" /></div></div>
+    <div class="form-row"><div class="form-group"><label>Tags (comma separated)</label><input id="m-tags" value="${(Array.isArray(e.tags) ? e.tags : []).join(', ')}" /></div></div>
     <div class="form-row"><div class="form-group"><label>Sort order</label><input id="m-sort" type="number" value="${e.sort_order||0}" /></div></div>`;
 }
 
