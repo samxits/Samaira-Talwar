@@ -522,7 +522,7 @@ function expForm(e = {}) {
       <div class="form-group"><label>Date range</label><input id="m-dates" value="${e.date_str||''}" placeholder="Jan 2024 – Present" /></div>
       <div class="form-group"><label>Current?</label><select id="m-current"><option value="false" ${!e.is_current?'selected':''}>No</option><option value="true" ${e.is_current?'selected':''}>Yes (shows NOW)</option></select></div>
     </div>
-    <div class="form-row"><div class="form-group"><label>Description</label><textarea id="m-desc" rows="4">${e.description||''}</textarea></div></div>
+    <div class="form-row"><div class="form-group"><label>Description</label><textarea id="m-desc" rows="4"></textarea></div></div>
     <div class="form-row"><div class="form-group"><label>Tags (comma separated)</label><input id="m-tags" value="${(e.tags||[]).join(', ')}" /></div></div>
     <div class="form-row"><div class="form-group"><label>Sort order</label><input id="m-sort" type="number" value="${e.sort_order||0}" /></div></div>`;
 }
@@ -531,6 +531,8 @@ function openExpModal(type, id) {
   const list = _exp[type] || [];
   const e = id ? list.find(x => x.id === id) : {};
   openModal(id ? 'Edit Role' : 'Add Role', expForm(e||{}), () => saveExp(type, id));
+  // set textarea value after innerHTML is set to avoid HTML-breaking the modal
+  document.getElementById('m-desc').value = e ? (e.description || '') : '';
 }
 function editExp(id, type) { openExpModal(type, id); }
 
