@@ -615,14 +615,14 @@ async function loadLanguages() {
   document.getElementById('lang-editor').innerHTML = _langs.map((l, i) => `
     <div class="lang-row-edit">
       <input value="${l.name}" onchange="_langs[${i}].name=this.value" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.82rem;outline:none;" />
-      <input type="range" class="lang-slider" min="0" max="100" value="${l.level}" oninput="_langs[${i}].level=+this.value;document.getElementById('lv${i}').textContent=this.value+'%'" />
-      <span id="lv${i}" style="font-size:.8rem;color:var(--mid);">${l.level}%</span>
+      <input type="range" class="lang-slider" min="0" max="100" value="${l.level_pct}" oninput="_langs[${i}].level_pct=+this.value;document.getElementById('lv${i}').textContent=this.value+'%'" />
+      <span id="lv${i}" style="font-size:.8rem;color:var(--mid);">${l.level_pct}%</span>
       <input value="${l.level_label||''}" onchange="_langs[${i}].level_label=this.value" placeholder="Fluent" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.78rem;outline:none;" />
     </div>`).join('');
 }
 
 async function saveLangs() {
-  const updates = _langs.map(l => db.from('languages').update({ name: l.name, level: l.level, level_label: l.level_label }).eq('id', l.id));
+  const updates = _langs.map(l => db.from('languages').update({ name: l.name, level_pct: l.level_pct, level_label: l.level_label }).eq('id', l.id));
   const results = await Promise.all(updates);
   const err = results.find(r => r.error);
   err ? toast('Error: ' + err.error.message, 'error') : toast('✓ Languages saved!');
