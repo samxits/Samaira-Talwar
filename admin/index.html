@@ -140,6 +140,7 @@
       <div class="nav-section">Content</div>
       <div class="nav-item" data-panel="profile"><span class="icon">👤</span> Profile & Bio</div>
       <div class="nav-item" data-panel="articles"><span class="icon">✍️</span> Articles</div>
+      <div class="nav-item" data-panel="casestudies"><span class="icon">🔬</span> Case Studies</div>
       <div class="nav-item" data-panel="experience"><span class="icon">💼</span> Work Experience</div>
       <div class="nav-item" data-panel="certifications"><span class="icon">🏅</span> Certifications</div>
       <div class="nav-section">About Page</div>
@@ -281,6 +282,21 @@
       </div>
     </div>
 
+    <div class="panel" id="panel-casestudies">
+      <div class="panel-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panel-title">Case Studies</div><div class="panel-sub">The 3 featured projects on the Work page.</div></div>
+        <button class="btn btn-primary" onclick="openCSModal()">+ Add Case Study</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Organisation</th><th>Year</th><th>Actions</th></tr></thead>
+            <tbody id="cs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div class="panel" id="panel-languages">
       <div class="panel-header"><div class="panel-title">Languages</div><div class="panel-sub">Adjust fluency levels (0–100).</div></div>
       <div class="card">
@@ -370,7 +386,7 @@ document.querySelectorAll('.nav-item[data-panel]').forEach(item => {
     const panel = document.getElementById('panel-' + item.dataset.panel);
     if (panel) {
       panel.classList.add('active');
-      const loaders = { profile: loadProfile, articles: loadArticles, experience: () => loadExp('work'), volunteer: () => loadExp('volunteer'), certifications: loadCerts, languages: loadLanguages, skills: loadSkills, stats: loadStats };
+      const loaders = { profile: loadProfile, articles: loadArticles, casestudies: loadCaseStudies, experience: () => loadExp('work'), volunteer: () => loadExp('volunteer'), certifications: loadCerts, languages: loadLanguages, skills: loadSkills, stats: loadStats };
       if (loaders[item.dataset.panel]) loaders[item.dataset.panel]();
     }
   });
@@ -647,6 +663,66 @@ async function loadStats() {
         <input value="${s.label}" onchange="_stats[${i}].label=this.value" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.85rem;outline:none;width:100%;" />
       </div>
     </div>`).join('');
+}
+
+let _cs = [];
+async function loadCaseStudies() {
+  const { data } = await db.from('case_studies').select('*').order('sort_order');
+  _cs = data || [];
+  document.getElementById('cs-tbody').innerHTML = _cs.map(s => `
+    <tr>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.title}</td>
+      <td>${s.org||''}</td><td>${s.year||''}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-sm btn-ghost" onclick="editCS('${s.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteCS('${s.id}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function csForm(s = {}) {
+  return `
+    <div class="form-row"><div class="form-group"><label>Title</label><input id="m-cs-title" value="${(s.title||'').replace(/"/g,'&quot;')}" /></div></div>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Organisation</label><input id="m-cs-org" value="${s.org||''}" /></div>
+      <div class="form-group"><label>Year</label><input id="m-cs-year" value="${s.year||''}" placeholder="2024" /></div>
+    </div>
+    <div class="form-row"><div class="form-group"><label>Tags / Category</label><input id="m-cs-tags" value="${s.tags||''}" placeholder="Growth Strategy · Community" /></div></div>
+    <div class="form-row"><div class="form-group"><label>The Problem</label><textarea id="m-cs-problem" rows="3"></textarea></div></div>
+    <div class="form-row"><div class="form-group"><label>What I Did</label><textarea id="m-cs-approach" rows="4"></textarea></div></div>
+    <div class="form-row"><div class="form-group"><label>Results (one per line: "70% | Audience growth")</label><textarea id="m-cs-results" rows="3"></textarea></div></div>
+    <div class="form-row"><div class="form-group"><label>Sort order</label><input id="m-cs-sort" type="number" value="${s.sort_order||0}" /></div></div>`;
+}
+
+function openCSModal(id) {
+  const s = id ? _cs.find(x => x.id === id) : {};
+  openModal(id ? 'Edit Case Study' : 'Add Case Study', csForm(s||{}), () => saveCS(id));
+  document.getElementById('m-cs-problem').value = s ? (s.problem||'') : '';
+  document.getElementById('m-cs-approach').value = s ? (s.approach||'') : '';
+  document.getElementById('m-cs-results').value = s ? (s.results||'') : '';
+}
+function editCS(id) { openCSModal(id); }
+
+async function saveCS(id) {
+  const payload = {
+    title: document.getElementById('m-cs-title').value,
+    org: document.getElementById('m-cs-org').value,
+    year: document.getElementById('m-cs-year').value,
+    tags: document.getElementById('m-cs-tags').value,
+    problem: document.getElementById('m-cs-problem').value,
+    approach: document.getElementById('m-cs-approach').value,
+    results: document.getElementById('m-cs-results').value,
+    sort_order: parseInt(document.getElementById('m-cs-sort').value)||0,
+  };
+  const { error } = id ? await db.from('case_studies').update(payload).eq('id', id) : await db.from('case_studies').insert(payload);
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  toast('✓ Case study saved!'); closeModal(); loadCaseStudies();
+}
+
+async function deleteCS(id) {
+  if (!confirm('Delete this case study?')) return;
+  await db.from('case_studies').delete().eq('id', id);
+  loadCaseStudies();
 }
 
 async function saveStats() {

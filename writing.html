@@ -2,29 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing — Samaira Talwar</title>
+  <title>Work — Samaira Talwar</title>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    .cs-grid { display: flex; flex-direction: column; gap: 2px; background: var(--faint); }
+    .cs-item { background: var(--cream); display: grid; grid-template-columns: 1fr 1.6fr; gap: 0; }
+    .cs-item:nth-child(even) { grid-template-columns: 1.6fr 1fr; }
+    .cs-item:nth-child(even) .cs-meta { order: 2; }
+    .cs-item:nth-child(even) .cs-body { order: 1; }
+    .cs-meta { padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--faint); }
+    .cs-item:nth-child(even) .cs-meta { border-right: none; border-left: 1px solid var(--faint); }
+    .cs-num { font-family: 'EB Garamond', serif; font-size: 5rem; color: var(--faint); line-height: 1; }
+    .cs-tag { font-size: .6rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--coral); margin-bottom: .6rem; }
+    .cs-org { font-size: .75rem; color: #aaa; margin-top: auto; }
+    .cs-body { padding: 4rem 3rem; }
+    .cs-title { font-family: 'EB Garamond', serif; font-size: clamp(1.6rem, 2.5vw, 2.4rem); line-height: 1.1; margin-bottom: 1.5rem; }
+    .cs-title em { font-style: italic; color: var(--coral); }
+    .cs-problem { font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mid); margin-bottom: .4rem; }
+    .cs-text { font-size: .9rem; color: var(--mid); line-height: 1.8; margin-bottom: 1.5rem; }
+    .cs-results { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--faint); }
+    .cs-result { display: flex; flex-direction: column; }
+    .cs-result-num { font-family: 'EB Garamond', serif; font-size: 2rem; color: var(--black); line-height: 1; }
+    .cs-result-lbl { font-size: .68rem; color: #aaa; margin-top: .2rem; }
+
+    .divider { padding: 3rem; border-top: 1px solid var(--faint); }
+    .divider-label { font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--coral); margin-bottom: .5rem; }
+    .divider-head { font-family: 'EB Garamond', serif; font-size: 1.4rem; }
+
     .filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; padding: 2rem 3rem; border-bottom: 1px solid var(--faint); }
     .filter-btn { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .4rem 1rem; border-radius: 100px; border: 1.5px solid var(--faint); background: transparent; color: var(--mid); cursor: pointer; transition: all .22s; }
     .filter-btn:hover, .filter-btn.active { background: var(--black); color: var(--cream); border-color: var(--black); }
     .art-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--faint); }
-    .art-card { background: var(--cream); padding: 2.5rem 2.2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px; position: relative; transition: background .28s; }
+    .art-card { background: var(--cream); padding: 2.5rem 2.2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; position: relative; transition: background .28s; }
     .art-card:hover { background: var(--black); }
     .art-card:hover .art-cat { color: var(--lime); }
     .art-card:hover .art-title { color: var(--cream); font-style: italic; }
     .art-card:hover .art-meta { color: rgba(255,255,255,.35); }
     .art-cat { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .8rem; transition: color .28s; }
-    .art-title { font-family: 'EB Garamond', serif; font-size: 1.25rem; line-height: 1.3; flex: 1; transition: color .28s, font-style .2s; }
-    .art-meta { font-size: .7rem; color: #aaa; margin-top: 1.4rem; transition: color .28s; }
+    .art-title { font-family: 'EB Garamond', serif; font-size: 1.15rem; line-height: 1.3; flex: 1; transition: color .28s; }
+    .art-meta { font-size: .7rem; color: #aaa; margin-top: 1.2rem; transition: color .28s; }
     .art-arrow { position: absolute; bottom: 1.4rem; right: 1.4rem; font-size: 1rem; color: var(--faint); transition: all .28s; }
     .art-card:hover .art-arrow { color: var(--coral); transform: translate(3px,-3px); }
-    .art-card.featured { grid-column: span 2; min-height: 300px; }
-    .art-card.featured .art-title { font-size: 1.8rem; }
-    .loading { padding: 4rem 3rem; text-align: center; color: var(--mid); font-size: .9rem; }
-    @media (max-width: 900px) { .filter-bar { padding: 1.5rem; } .art-grid { grid-template-columns: 1fr 1fr; } .art-card.featured { grid-column: span 2; } }
-    @media (max-width: 580px) { .art-grid { grid-template-columns: 1fr; } .art-card.featured { grid-column: span 1; } }
+    .art-card.featured { grid-column: span 2; min-height: 280px; }
+    .art-card.featured .art-title { font-size: 1.6rem; }
+
+    @media (max-width: 860px) {
+      .cs-item, .cs-item:nth-child(even) { grid-template-columns: 1fr; }
+      .cs-item:nth-child(even) .cs-meta, .cs-item:nth-child(even) .cs-body { order: unset; }
+      .cs-meta { border-right: none; border-bottom: 1px solid var(--faint); padding: 2.5rem 1.5rem; }
+      .cs-body { padding: 2.5rem 1.5rem; }
+      .filter-bar { padding: 1.5rem; }
+      .art-grid { grid-template-columns: 1fr; }
+      .art-card.featured { grid-column: span 1; }
+    }
   </style>
 </head>
 <body>
@@ -33,16 +64,92 @@
   <a href="index.html" class="nav-logo">Samaira Talwar</a>
   <ul class="nav-links">
     <li><a href="about.html">About</a></li>
-    <li><a href="writing.html" class="active">Writing</a></li>
+    <li><a href="writing.html" class="active">Work</a></li>
     <li><a href="experience.html">Experience</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
 </nav>
 
 <div class="page-hero">
-  <p class="page-hero-tag rv">The Phoenix News</p>
-  <h1 class="rv">My <em>writing</em></h1>
-  <p class="page-hero-sub rv" id="art-count">Published articles across science, politics, arts, sports, and campus life.</p>
+  <p class="page-hero-tag rv">Selected projects</p>
+  <h1 class="rv">The <em>work</em></h1>
+  <p class="page-hero-sub rv">Three things I built that didn't exist before I showed up.</p>
+</div>
+
+<div class="cs-grid" id="cs-grid">
+  <!-- Case Study 1 -->
+  <div class="cs-item rv">
+    <div class="cs-meta">
+      <div class="cs-num">01</div>
+      <div>
+        <div class="cs-tag">Growth Strategy</div>
+        <div class="cs-org">The Phoenix News · 2024</div>
+      </div>
+    </div>
+    <div class="cs-body">
+      <div class="cs-title">From invisible to <em>unmissable</em> — growing a student publication's audience by 70%</div>
+      <div class="cs-problem">The problem</div>
+      <p class="cs-text">The Phoenix News had a social media presence that looked like an afterthought — sporadic posts, generic campus-news content, no personality. Engagement was flat and follower growth had stalled. Nobody was paying attention.</p>
+      <div class="cs-problem">What I did</div>
+      <p class="cs-text">I scrapped the existing approach and rebuilt the content strategy from scratch. Instead of pushing every article, I created content formats students actually engaged with: opinion polls, behind-the-scenes newsroom content, trending audio reels, and fast-turnaround reactions to campus events. I tracked performance weekly, killed what wasn't working, and doubled down on what was. Within weeks, the data was clear — personality and speed beat polish and volume every time.</p>
+      <div class="cs-results">
+        <div class="cs-result"><span class="cs-result-num">70%</span><span class="cs-result-lbl">Audience growth</span></div>
+        <div class="cs-result"><span class="cs-result-num">1yr</span><span class="cs-result-lbl">Time to results</span></div>
+        <div class="cs-result"><span class="cs-result-num">↑3×</span><span class="cs-result-lbl">Engagement rate</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Study 2 -->
+  <div class="cs-item rv">
+    <div class="cs-meta">
+      <div class="cs-num">02</div>
+      <div>
+        <div class="cs-tag">Program Design · Community</div>
+        <div class="cs-org">UBC Okanagan · 2024–Present</div>
+      </div>
+    </div>
+    <div class="cs-body">
+      <div class="cs-title">Building a mentorship program that <em>actually worked</em> — 135 matches and counting</div>
+      <div class="cs-problem">The problem</div>
+      <p class="cs-text">First-year students at UBCO were struggling to find their footing — overwhelmed by a new city, a new institution, and no real roadmap. The existing peer support structures were sparse and transactional. Students needed genuine connection with people who'd already figured it out.</p>
+      <div class="cs-problem">What I did</div>
+      <p class="cs-text">I designed and ran a mentorship matching program from the ground up. Built the application and matching process, trained upper-year mentors on how to actually be useful (not just available), planned orientation events that brought people together before the stress set in, and ran the communication strategy that kept participants engaged beyond week one. The goal wasn't just matches — it was relationships that lasted the year.</p>
+      <div class="cs-results">
+        <div class="cs-result"><span class="cs-result-num">135</span><span class="cs-result-lbl">Matches made</span></div>
+        <div class="cs-result"><span class="cs-result-num">40+</span><span class="cs-result-lbl">Mentors trained</span></div>
+        <div class="cs-result"><span class="cs-result-num">0→1</span><span class="cs-result-lbl">Built from scratch</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Study 3 -->
+  <div class="cs-item rv">
+    <div class="cs-meta">
+      <div class="cs-num">03</div>
+      <div>
+        <div class="cs-tag">Editorial Strategy · Product</div>
+        <div class="cs-org">The Phoenix News · 2026</div>
+      </div>
+    </div>
+    <div class="cs-body">
+      <div class="cs-title">Relaunching a student newsroom — new website, <em>first magazine</em>, zero budget</div>
+      <div class="cs-problem">The problem</div>
+      <p class="cs-text">When I became Editor-in-Chief, The Phoenix News had an outdated website that didn't reflect the quality of the journalism, no print presence, and an editorial process that ran on hope. The publication needed to look and operate like a real newsroom — not a student club.</p>
+      <div class="cs-problem">What I did</div>
+      <p class="cs-text">I rebuilt the website from scratch, restructured the editorial calendar so deadlines were actually met, and launched the publication's first-ever print magazine — coordinating design, editorial, and production simultaneously. Every decision was made without a budget and with a team of student volunteers. The result was a publication that finally looked as credible as the stories it was telling.</p>
+      <div class="cs-results">
+        <div class="cs-result"><span class="cs-result-num">1st</span><span class="cs-result-lbl">Print magazine ever</span></div>
+        <div class="cs-result"><span class="cs-result-num">↑</span><span class="cs-result-lbl">Site rebuilt from scratch</span></div>
+        <div class="cs-result"><span class="cs-result-num">£0</span><span class="cs-result-lbl">Budget</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider rv" style="padding:3rem 3rem 1.5rem;">
+  <div class="divider-label">Published writing</div>
+  <div class="divider-head">Articles — The Phoenix News</div>
 </div>
 
 <div class="filter-bar" id="filter-bar">
@@ -75,10 +182,9 @@
 <script>
   (async () => {
     try {
-      const articles = await cmsArticles();
+      const [cs, articles] = await Promise.all([cmsCaseStudies(), cmsArticles()]);
+      if (cs?.length) renderCaseStudies(cs, document.getElementById('cs-grid'));
       if (articles?.length) {
-        document.getElementById('art-count').textContent =
-          `${articles.length} articles across 5 editorial sections — The Phoenix News`;
         renderArticles(articles, document.getElementById('art-grid'), document.getElementById('filter-bar'));
       }
     } catch(e) { /* shows hardcoded fallback */ }

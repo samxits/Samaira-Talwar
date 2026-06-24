@@ -63,6 +63,11 @@ async function cmsSkills() {
   return data || [];
 }
 
+async function cmsCaseStudies() {
+  const { data } = await db.from('case_studies').select('*').order('sort_order');
+  return data || [];
+}
+
 // ── RENDERERS ────────────────────────────────────────────────
 
 function renderStats(stats, container) {
@@ -171,4 +176,32 @@ function renderLanguages(langs, container) {
 function renderSkills(skills, container) {
   if (!container || !skills.length) return;
   container.innerHTML = skills.map(s => `<span class="chip">${s.name}</span>`).join('');
+}
+
+function renderCaseStudies(studies, container) {
+  if (!container || !studies.length) return;
+  container.innerHTML = studies.map((s, i) => `
+    <div class="cs-item rv">
+      <div class="cs-meta">
+        <div class="cs-num">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="cs-tag">${s.tags || ''}</div>
+          <div class="cs-org">${s.org} · ${s.year || ''}</div>
+        </div>
+      </div>
+      <div class="cs-body">
+        <div class="cs-title">${s.title}</div>
+        <div class="cs-problem">The problem</div>
+        <p class="cs-text">${s.problem || ''}</p>
+        <div class="cs-problem">What I did</div>
+        <p class="cs-text">${s.approach || ''}</p>
+        <div class="cs-results">
+          ${(s.results || '').split('\n').filter(Boolean).map(r => {
+            const [num, ...rest] = r.split('|');
+            return `<div class="cs-result"><span class="cs-result-num">${num.trim()}</span><span class="cs-result-lbl">${rest.join('|').trim()}</span></div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+  revealAll();
 }
