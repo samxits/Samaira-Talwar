@@ -1,6 +1,659 @@
-Admin Panel
-Samaira Talwar · Portfolio CMS
-EMAIL
-PASSWORD
-SIGN IN
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Samaira Talwar</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --ink: #0a0a0a; --cream: #fffbf4; --coral: #ff4d2e; --lime: #b8ff3e;
+      --mid: #666; --faint: #e8e2d9; --sidebar: #111; --hover: #1e1e1e;
+      --danger: #e53e3e; --success: #38a169; --warn: #d69e2e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Helvetica Neue', Arial, sans-serif; background: #f4f1eb; font-size: 14px; }
 
+    #auth-screen { position: fixed; inset: 0; background: var(--ink); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    #auth-screen.hidden { display: none; }
+    .auth-box { background: #fff; padding: 3rem; width: 360px; border-radius: 4px; }
+    .auth-box h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: .3rem; }
+    .auth-box p { font-size: .82rem; color: var(--mid); margin-bottom: 2rem; }
+    .auth-box label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .4rem; color: var(--ink); }
+    .auth-box input { width: 100%; padding: .7rem .9rem; border: 1.5px solid var(--faint); border-radius: 4px; font-size: .9rem; margin-bottom: 1.2rem; outline: none; transition: border-color .2s; }
+    .auth-box input:focus { border-color: var(--coral); }
+    .auth-box button { width: 100%; padding: .85rem; background: var(--coral); color: #fff; border: none; border-radius: 4px; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
+    .auth-box button:hover { background: #e03a1f; }
+    .auth-error { color: var(--danger); font-size: .78rem; margin-top: .6rem; display: none; }
+
+    #app { display: flex; height: 100vh; overflow: hidden; }
+    #app.hidden { display: none; }
+
+    aside { width: 220px; background: var(--sidebar); flex-shrink: 0; display: flex; flex-direction: column; overflow-y: auto; }
+    .aside-logo { padding: 1.5rem 1.2rem 1rem; font-size: .8rem; font-weight: 700; color: #fff; letter-spacing: .06em; border-bottom: 1px solid #2a2a2a; }
+    .aside-logo span { color: var(--coral); }
+    .aside-nav { flex: 1; padding: .8rem 0; }
+    .nav-section { padding: .5rem 1.2rem .2rem; font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #555; margin-top: .5rem; }
+    .nav-item { display: flex; align-items: center; gap: .6rem; padding: .6rem 1.2rem; color: #aaa; font-size: .8rem; cursor: pointer; transition: all .18s; text-decoration: none; border-left: 3px solid transparent; }
+    .nav-item:hover { background: var(--hover); color: #fff; }
+    .nav-item.active { background: var(--hover); color: #fff; border-left-color: var(--coral); }
+    .nav-item .icon { font-size: 1rem; }
+    .aside-footer { padding: 1rem 1.2rem; border-top: 1px solid #2a2a2a; }
+    .logout-btn { width: 100%; padding: .55rem; background: transparent; border: 1px solid #333; color: #888; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all .2s; }
+    .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+    main { flex: 1; overflow-y: auto; }
+    .panel { display: none; padding: 2.5rem; min-height: 100%; }
+    .panel.active { display: block; }
+    .panel-header { margin-bottom: 2rem; }
+    .panel-title { font-size: 1.4rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+    .panel-sub { font-size: .8rem; color: var(--mid); }
+
+    .card { background: #fff; border-radius: 6px; padding: 1.8rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .card-title { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.2rem; }
+
+    .form-row { display: grid; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: .35rem; }
+    .form-group label { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+    .form-group input, .form-group textarea, .form-group select { padding: .6rem .8rem; border: 1.5px solid var(--faint); border-radius: 4px; font-size: .85rem; font-family: inherit; outline: none; resize: vertical; transition: border-color .2s; background: #fff; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--coral); }
+    .form-group small { font-size: .68rem; color: #aaa; }
+
+    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem; border-radius: 4px; font-size: .75rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; cursor: pointer; border: none; transition: all .2s; }
+    .btn-primary { background: var(--coral); color: #fff; }
+    .btn-primary:hover { background: #e03a1f; }
+    .btn-sm { padding: .35rem .8rem; font-size: .68rem; }
+    .btn-danger { background: #fff0f0; color: var(--danger); border: 1px solid #fecaca; }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+    .btn-ghost { background: #f5f5f5; color: var(--ink); }
+    .btn-ghost:hover { background: #e8e8e8; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); padding: .7rem .8rem; border-bottom: 2px solid var(--faint); text-align: left; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #f4f1eb; transition: background .15s; }
+    tbody tr:hover { background: #fafaf9; }
+    tbody td { padding: .75rem .8rem; font-size: .82rem; color: var(--ink); vertical-align: middle; }
+    .td-actions { display: flex; gap: .4rem; }
+
+    .badge { display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .55rem; border-radius: 100px; }
+    .badge-green { background: #f0fdf4; color: var(--success); }
+    .badge-gray  { background: #f5f5f5; color: #888; }
+    .badge-coral { background: #fff5f3; color: var(--coral); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 500; display: none; align-items: flex-start; justify-content: center; padding: 2rem; overflow-y: auto; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 8px; width: 100%; max-width: 640px; padding: 2rem; margin: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-title { font-size: 1rem; font-weight: 700; }
+    .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--mid); line-height: 1; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: .8rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--faint); }
+
+    .dash-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 2rem; }
+    .dash-card { background: #fff; border-radius: 6px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .dash-num { font-size: 2.2rem; font-weight: 700; color: var(--coral); line-height: 1; }
+    .dash-lbl { font-size: .72rem; color: var(--mid); margin-top: .4rem; }
+
+    .lang-editor { display: flex; flex-direction: column; gap: 1rem; }
+    .lang-row-edit { display: grid; grid-template-columns: 140px 1fr 50px 120px; gap: .8rem; align-items: center; }
+    .lang-slider { width: 100%; }
+
+    .skills-editor { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .skill-chip { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; background: #f4f1eb; border-radius: 100px; font-size: .75rem; }
+    .skill-chip button { background: none; border: none; cursor: pointer; color: #aaa; font-size: .9rem; line-height: 1; padding: 0; }
+    .skill-chip button:hover { color: var(--danger); }
+    .skill-add { display: flex; gap: .6rem; }
+    .skill-add input { flex: 1; padding: .5rem .8rem; border: 1.5px solid var(--faint); border-radius: 4px; font-size: .82rem; outline: none; }
+    .skill-add input:focus { border-color: var(--coral); }
+
+    .stats-editor { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-edit-card { background: #f9f7f3; border-radius: 6px; padding: 1.2rem; }
+
+    #toast { position: fixed; bottom: 2rem; right: 2rem; padding: .8rem 1.4rem; border-radius: 6px; font-size: .82rem; font-weight: 600; z-index: 9999; opacity: 0; transform: translateY(8px); transition: all .3s; pointer-events: none; }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.success { background: var(--success); color: #fff; }
+    #toast.error { background: var(--danger); color: #fff; }
+  </style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-box">
+    <h1>Admin Panel</h1>
+    <p>Samaira Talwar · Portfolio CMS</p>
+    <label>Email</label>
+    <input type="email" id="auth-email" placeholder="your@email.com" />
+    <label>Password</label>
+    <input type="password" id="auth-password" placeholder="••••••••" />
+    <button id="auth-btn">Sign In</button>
+    <div class="auth-error" id="auth-error">Invalid email or password.</div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <aside>
+    <div class="aside-logo">Admin <span>·</span> ST</div>
+    <nav class="aside-nav">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" data-panel="dashboard"><span class="icon">📊</span> Dashboard</div>
+      <div class="nav-section">Content</div>
+      <div class="nav-item" data-panel="profile"><span class="icon">👤</span> Profile & Bio</div>
+      <div class="nav-item" data-panel="articles"><span class="icon">✍️</span> Articles</div>
+      <div class="nav-item" data-panel="experience"><span class="icon">💼</span> Work Experience</div>
+      <div class="nav-item" data-panel="volunteer"><span class="icon">🤝</span> Volunteer</div>
+      <div class="nav-item" data-panel="certifications"><span class="icon">🏅</span> Certifications</div>
+      <div class="nav-section">About Page</div>
+      <div class="nav-item" data-panel="languages"><span class="icon">🌐</span> Languages</div>
+      <div class="nav-item" data-panel="skills"><span class="icon">⚡</span> Skills</div>
+      <div class="nav-section">Homepage</div>
+      <div class="nav-item" data-panel="stats"><span class="icon">📈</span> Stats</div>
+    </nav>
+    <div class="aside-footer">
+      <button class="logout-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="panel active" id="panel-dashboard">
+      <div class="panel-header">
+        <div class="panel-title">Dashboard</div>
+        <div class="panel-sub">Welcome back, Samaira.</div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card"><div class="dash-num" id="d-articles">—</div><div class="dash-lbl">Articles</div></div>
+        <div class="dash-card"><div class="dash-num" id="d-experience">—</div><div class="dash-lbl">Work Roles</div></div>
+        <div class="dash-card"><div class="dash-num" id="d-volunteer">—</div><div class="dash-lbl">Volunteer</div></div>
+        <div class="dash-card"><div class="dash-num" id="d-certs">—</div><div class="dash-lbl">Certifications</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Quick Links</div>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
+          <a href="../index.html" target="_blank" class="btn btn-ghost">Homepage ↗</a>
+          <a href="../writing.html" target="_blank" class="btn btn-ghost">Writing ↗</a>
+          <a href="../experience.html" target="_blank" class="btn btn-ghost">Experience ↗</a>
+          <a href="../about.html" target="_blank" class="btn btn-ghost">About ↗</a>
+          <a href="../contact.html" target="_blank" class="btn btn-ghost">Contact ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-profile">
+      <div class="panel-header">
+        <div class="panel-title">Profile & Bio</div>
+        <div class="panel-sub">Controls name, tagline, bio paragraphs, and contact info.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Basic Info</div>
+        <div class="form-row cols-2">
+          <div class="form-group"><label>Full Name</label><input id="p-name" type="text" /></div>
+          <div class="form-group"><label>Current Role</label><input id="p-role" type="text" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Tagline</label><input id="p-tagline" type="text" /></div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="form-group"><label>Location</label><input id="p-location" type="text" /></div>
+          <div class="form-group"><label>University</label><input id="p-university" type="text" /></div>
+          <div class="form-group"><label>Year / Track</label><input id="p-year" type="text" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Degree</label><input id="p-degree" type="text" /></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hero Bio (Homepage)</div>
+        <div class="form-group"><textarea id="p-bio-hero" rows="3"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">About Page Bio</div>
+        <div class="form-group" style="margin-bottom:.8rem;"><label>Paragraph 1</label><textarea id="p-bio-1" rows="3"></textarea></div>
+        <div class="form-group" style="margin-bottom:.8rem;"><label>Paragraph 2</label><textarea id="p-bio-2" rows="3"></textarea></div>
+        <div class="form-group"><label>Paragraph 3</label><textarea id="p-bio-3" rows="3"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contact & Links</div>
+        <div class="form-row cols-3">
+          <div class="form-group"><label>Email</label><input id="p-email" type="email" /></div>
+          <div class="form-group"><label>LinkedIn URL</label><input id="p-linkedin" type="url" /></div>
+          <div class="form-group"><label>Phoenix Author URL</label><input id="p-phoenix" type="url" /></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+    </div>
+
+    <div class="panel" id="panel-articles">
+      <div class="panel-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panel-title">Articles</div><div class="panel-sub">Manage published writing.</div></div>
+        <button class="btn btn-primary" onclick="openArticleModal()">+ Add Article</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Featured</th><th>Actions</th></tr></thead>
+            <tbody id="articles-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-experience">
+      <div class="panel-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panel-title">Work Experience</div><div class="panel-sub">Manage work history.</div></div>
+        <button class="btn btn-primary" onclick="openExpModal('work')">+ Add Role</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Organisation</th><th>Role</th><th>Dates</th><th>Current</th><th>Actions</th></tr></thead>
+            <tbody id="work-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-volunteer">
+      <div class="panel-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panel-title">Volunteer</div><div class="panel-sub">Manage volunteer roles.</div></div>
+        <button class="btn btn-primary" onclick="openExpModal('volunteer')">+ Add Role</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Organisation</th><th>Role</th><th>Dates</th><th>Current</th><th>Actions</th></tr></thead>
+            <tbody id="vol-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-certifications">
+      <div class="panel-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="panel-title">Certifications</div><div class="panel-sub">Courses and certifications.</div></div>
+        <button class="btn btn-primary" onclick="openCertModal()">+ Add Cert</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Issuer</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="certs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-languages">
+      <div class="panel-header"><div class="panel-title">Languages</div><div class="panel-sub">Adjust fluency levels (0–100).</div></div>
+      <div class="card">
+        <div class="lang-editor" id="lang-editor"></div>
+        <button class="btn btn-primary" style="margin-top:1.2rem;" onclick="saveLangs()">Save Languages</button>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-skills">
+      <div class="panel-header"><div class="panel-title">Skills</div><div class="panel-sub">Add or remove skill chips on the About page.</div></div>
+      <div class="card">
+        <div class="skills-editor" id="skills-editor"></div>
+        <div class="skill-add">
+          <input type="text" id="skill-input" placeholder="Add a skill…" />
+          <button class="btn btn-primary" onclick="addSkill()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-stats">
+      <div class="panel-header"><div class="panel-title">Stats</div><div class="panel-sub">The 4 numbers on the homepage dark band.</div></div>
+      <div class="card">
+        <div class="stats-editor" id="stats-editor"></div>
+        <button class="btn btn-primary" style="margin-top:1.2rem;" onclick="saveStats()">Save Stats</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Edit</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://ekrbzbkytncjmzdftami.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MC2SA-K_Pbe0HamW045Veg_xcLb6eg8';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function checkSession() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) showApp();
+}
+
+document.getElementById('auth-btn').addEventListener('click', async () => {
+  const email = document.getElementById('auth-email').value;
+  const pass  = document.getElementById('auth-password').value;
+  const { error } = await db.auth.signInWithPassword({ email, password: pass });
+  if (error) { document.getElementById('auth-error').style.display = 'block'; }
+  else { showApp(); }
+});
+
+document.getElementById('auth-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('auth-btn').click();
+});
+
+async function signOut() {
+  await db.auth.signOut();
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('auth-screen').classList.remove('hidden');
+}
+
+function showApp() {
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  loadDashboard();
+}
+
+checkSession();
+
+document.querySelectorAll('.nav-item[data-panel]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    const panel = document.getElementById('panel-' + item.dataset.panel);
+    if (panel) {
+      panel.classList.add('active');
+      const loaders = { profile: loadProfile, articles: loadArticles, experience: () => loadExp('work'), volunteer: () => loadExp('volunteer'), certifications: loadCerts, languages: loadLanguages, skills: loadSkills, stats: loadStats };
+      if (loaders[item.dataset.panel]) loaders[item.dataset.panel]();
+    }
+  });
+});
+
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = `show ${type}`;
+  setTimeout(() => el.className = '', 3000);
+}
+
+function openModal(title, body, onSave) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal-save').onclick = onSave;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+async function loadDashboard() {
+  const [art, work, vol, certs] = await Promise.all([
+    db.from('articles').select('id', { count: 'exact', head: true }),
+    db.from('experience').select('id', { count: 'exact', head: true }).eq('exp_type','work'),
+    db.from('experience').select('id', { count: 'exact', head: true }).eq('exp_type','volunteer'),
+    db.from('certifications').select('id', { count: 'exact', head: true }),
+  ]);
+  document.getElementById('d-articles').textContent = art.count ?? '—';
+  document.getElementById('d-experience').textContent = work.count ?? '—';
+  document.getElementById('d-volunteer').textContent = vol.count ?? '—';
+  document.getElementById('d-certs').textContent = certs.count ?? '—';
+}
+
+async function loadProfile() {
+  const { data } = await db.from('profile').select('*').single();
+  if (!data) return;
+  document.getElementById('p-name').value     = data.name || '';
+  document.getElementById('p-tagline').value  = data.tagline || '';
+  document.getElementById('p-role').value     = data.job_title || '';
+  document.getElementById('p-location').value = data.location || '';
+  document.getElementById('p-university').value = data.university || '';
+  document.getElementById('p-degree').value   = data.degree || '';
+  document.getElementById('p-year').value     = data.year || '';
+  document.getElementById('p-bio-hero').value = data.bio_hero || '';
+  document.getElementById('p-bio-1').value    = data.bio_about || '';
+  document.getElementById('p-bio-2').value    = data.bio_about_2 || '';
+  document.getElementById('p-bio-3').value    = data.bio_about_3 || '';
+  document.getElementById('p-email').value    = data.email || '';
+  document.getElementById('p-linkedin').value = data.linkedin_url || '';
+  document.getElementById('p-phoenix').value  = data.phoenix_author_url || '';
+}
+
+async function saveProfile() {
+  const { error } = await db.from('profile').update({
+    name: document.getElementById('p-name').value,
+    tagline: document.getElementById('p-tagline').value,
+    job_title: document.getElementById('p-role').value,
+    location: document.getElementById('p-location').value,
+    university: document.getElementById('p-university').value,
+    degree: document.getElementById('p-degree').value,
+    year: document.getElementById('p-year').value,
+    bio_hero: document.getElementById('p-bio-hero').value,
+    bio_about: document.getElementById('p-bio-1').value,
+    bio_about_2: document.getElementById('p-bio-2').value,
+    bio_about_3: document.getElementById('p-bio-3').value,
+    email: document.getElementById('p-email').value,
+    linkedin_url: document.getElementById('p-linkedin').value,
+    phoenix_author_url: document.getElementById('p-phoenix').value,
+  }).eq('id', 1);
+  error ? toast('Error: ' + error.message, 'error') : toast('✓ Profile saved!');
+}
+
+let _articles = [];
+async function loadArticles() {
+  const { data } = await db.from('articles').select('*').order('sort_order');
+  _articles = data || [];
+  document.getElementById('articles-tbody').innerHTML = _articles.map(a => `
+    <tr>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.title}</td>
+      <td><span class="badge badge-coral">${a.category}</span></td>
+      <td>${a.date_str}</td>
+      <td>${a.featured ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-gray">No</span>'}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-sm btn-ghost" onclick="editArticle('${a.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteArticle('${a.id}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function articleForm(a = {}) {
+  return `
+    <div class="form-row"><div class="form-group"><label>Title</label><input id="m-title" value="${(a.title||'').replace(/"/g,'&quot;')}" /></div></div>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Category</label><input id="m-cat" value="${a.category||''}" /></div>
+      <div class="form-group"><label>Date</label><input id="m-date" value="${a.date_str||''}" placeholder="Jan 2025" /></div>
+    </div>
+    <div class="form-row"><div class="form-group"><label>URL</label><input id="m-url" type="url" value="${a.url||''}" /></div></div>
+    <div class="form-row"><div class="form-group"><label>Preview text</label><textarea id="m-preview" rows="2">${a.preview||''}</textarea></div></div>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Sort order</label><input id="m-sort" type="number" value="${a.sort_order||0}" /></div>
+      <div class="form-group"><label>Featured?</label><select id="m-featured"><option value="false" ${!a.featured?'selected':''}>No</option><option value="true" ${a.featured?'selected':''}>Yes</option></select></div>
+    </div>`;
+}
+
+function openArticleModal(id) {
+  const a = id ? _articles.find(x => x.id === id) : {};
+  openModal(id ? 'Edit Article' : 'Add Article', articleForm(a||{}), () => saveArticle(id));
+}
+function editArticle(id) { openArticleModal(id); }
+
+async function saveArticle(id) {
+  const payload = { title: document.getElementById('m-title').value, category: document.getElementById('m-cat').value, date_str: document.getElementById('m-date').value, url: document.getElementById('m-url').value, preview: document.getElementById('m-preview').value, sort_order: parseInt(document.getElementById('m-sort').value)||0, featured: document.getElementById('m-featured').value === 'true' };
+  const { error } = id ? await db.from('articles').update(payload).eq('id', id) : await db.from('articles').insert(payload);
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  toast('✓ Article saved!'); closeModal(); loadArticles();
+}
+
+async function deleteArticle(id) {
+  if (!confirm('Delete this article?')) return;
+  const { error } = await db.from('articles').delete().eq('id', id);
+  error ? toast('Error: ' + error.message, 'error') : toast('✓ Deleted');
+  loadArticles();
+}
+
+let _exp = { work: [], volunteer: [] };
+async function loadExp(type) {
+  const { data } = await db.from('experience').select('*').eq('exp_type', type).order('sort_order');
+  _exp[type] = data || [];
+  const tbody = document.getElementById(type === 'work' ? 'work-tbody' : 'vol-tbody');
+  tbody.innerHTML = _exp[type].map(e => `
+    <tr>
+      <td>${e.org}</td><td>${e.role}</td><td>${e.date_str}</td>
+      <td>${e.is_current ? '<span class="badge badge-green">NOW</span>' : ''}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-sm btn-ghost" onclick="editExp('${e.id}','${type}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteExp('${e.id}','${type}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function expForm(e = {}) {
+  return `
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Organisation</label><input id="m-org" value="${(e.org||'').replace(/"/g,'&quot;')}" /></div>
+      <div class="form-group"><label>Role / Title</label><input id="m-role" value="${(e.role||'').replace(/"/g,'&quot;')}" /></div>
+    </div>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Date range</label><input id="m-dates" value="${e.date_str||''}" placeholder="Jan 2024 – Present" /></div>
+      <div class="form-group"><label>Current?</label><select id="m-current"><option value="false" ${!e.is_current?'selected':''}>No</option><option value="true" ${e.is_current?'selected':''}>Yes (shows NOW)</option></select></div>
+    </div>
+    <div class="form-row"><div class="form-group"><label>Description</label><textarea id="m-desc" rows="4">${e.description||''}</textarea></div></div>
+    <div class="form-row"><div class="form-group"><label>Tags (comma separated)</label><input id="m-tags" value="${(e.tags||[]).join(', ')}" /></div></div>
+    <div class="form-row"><div class="form-group"><label>Sort order</label><input id="m-sort" type="number" value="${e.sort_order||0}" /></div></div>`;
+}
+
+function openExpModal(type, id) {
+  const list = _exp[type] || [];
+  const e = id ? list.find(x => x.id === id) : {};
+  openModal(id ? 'Edit Role' : 'Add Role', expForm(e||{}), () => saveExp(type, id));
+}
+function editExp(id, type) { openExpModal(type, id); }
+
+async function saveExp(type, id) {
+  const tags = document.getElementById('m-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const payload = { org: document.getElementById('m-org').value, role: document.getElementById('m-role').value, date_str: document.getElementById('m-dates').value, is_current: document.getElementById('m-current').value === 'true', description: document.getElementById('m-desc').value, tags, sort_order: parseInt(document.getElementById('m-sort').value)||0, exp_type: type };
+  const { error } = id ? await db.from('experience').update(payload).eq('id', id) : await db.from('experience').insert(payload);
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  toast('✓ Saved!'); closeModal(); loadExp(type);
+}
+
+async function deleteExp(id, type) {
+  if (!confirm('Delete this role?')) return;
+  await db.from('experience').delete().eq('id', id);
+  loadExp(type);
+}
+
+let _certs = [];
+async function loadCerts() {
+  const { data } = await db.from('certifications').select('*').order('sort_order');
+  _certs = data || [];
+  document.getElementById('certs-tbody').innerHTML = _certs.map(c => `
+    <tr>
+      <td>${c.name}</td><td>${c.issuer||''}</td><td>${c.date_str||''}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-sm btn-ghost" onclick="editCert('${c.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteCert('${c.id}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function certForm(c = {}) {
+  return `
+    <div class="form-row"><div class="form-group"><label>Name</label><input id="m-cname" value="${(c.name||'').replace(/"/g,'&quot;')}" /></div></div>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Issuer</label><input id="m-cissuer" value="${c.issuer||''}" /></div>
+      <div class="form-group"><label>Date</label><input id="m-cdate" value="${c.date_str||''}" placeholder="2024" /></div>
+    </div>
+    <div class="form-row"><div class="form-group"><label>Sort order</label><input id="m-csort" type="number" value="${c.sort_order||0}" /></div></div>`;
+}
+
+function openCertModal(id) {
+  const c = id ? _certs.find(x => x.id === id) : {};
+  openModal(id ? 'Edit Cert' : 'Add Cert', certForm(c||{}), () => saveCert(id));
+}
+function editCert(id) { openCertModal(id); }
+
+async function saveCert(id) {
+  const payload = { name: document.getElementById('m-cname').value, issuer: document.getElementById('m-cissuer').value, date_str: document.getElementById('m-cdate').value, sort_order: parseInt(document.getElementById('m-csort').value)||0 };
+  const { error } = id ? await db.from('certifications').update(payload).eq('id', id) : await db.from('certifications').insert(payload);
+  if (error) { toast('Error: ' + error.message, 'error'); return; }
+  toast('✓ Saved!'); closeModal(); loadCerts();
+}
+
+async function deleteCert(id) {
+  if (!confirm('Delete?')) return;
+  await db.from('certifications').delete().eq('id', id);
+  loadCerts();
+}
+
+let _langs = [];
+async function loadLanguages() {
+  const { data } = await db.from('languages').select('*').order('sort_order');
+  _langs = data || [];
+  document.getElementById('lang-editor').innerHTML = _langs.map((l, i) => `
+    <div class="lang-row-edit">
+      <input value="${l.name}" onchange="_langs[${i}].name=this.value" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.82rem;outline:none;" />
+      <input type="range" class="lang-slider" min="0" max="100" value="${l.level}" oninput="_langs[${i}].level=+this.value;document.getElementById('lv${i}').textContent=this.value+'%'" />
+      <span id="lv${i}" style="font-size:.8rem;color:var(--mid);">${l.level}%</span>
+      <input value="${l.level_label||''}" onchange="_langs[${i}].level_label=this.value" placeholder="Fluent" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.78rem;outline:none;" />
+    </div>`).join('');
+}
+
+async function saveLangs() {
+  const updates = _langs.map(l => db.from('languages').update({ name: l.name, level: l.level, level_label: l.level_label }).eq('id', l.id));
+  const results = await Promise.all(updates);
+  const err = results.find(r => r.error);
+  err ? toast('Error: ' + err.error.message, 'error') : toast('✓ Languages saved!');
+}
+
+let _skills = [];
+async function loadSkills() {
+  const { data } = await db.from('skills').select('*').order('sort_order');
+  _skills = data || [];
+  document.getElementById('skills-editor').innerHTML = _skills.map(s => `
+    <div class="skill-chip">${s.name}<button onclick="deleteSkill('${s.id}')">×</button></div>`).join('');
+}
+
+async function addSkill() {
+  const name = document.getElementById('skill-input').value.trim();
+  if (!name) return;
+  await db.from('skills').insert({ name, sort_order: _skills.length });
+  document.getElementById('skill-input').value = '';
+  toast('✓ Skill added!'); loadSkills();
+}
+document.getElementById('skill-input').addEventListener('keydown', e => { if (e.key === 'Enter') addSkill(); });
+
+async function deleteSkill(id) {
+  await db.from('skills').delete().eq('id', id);
+  loadSkills();
+}
+
+let _stats = [];
+async function loadStats() {
+  const { data } = await db.from('stats').select('*').order('sort_order');
+  _stats = data || [];
+  document.getElementById('stats-editor').innerHTML = _stats.map((s, i) => `
+    <div class="stat-edit-card">
+      <div class="form-group" style="margin-bottom:.6rem;"><label>Value / Number</label>
+        <input value="${s.value}" onchange="_stats[${i}].value=this.value" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.85rem;outline:none;width:100%;" />
+      </div>
+      <div class="form-group"><label>Label</label>
+        <input value="${s.label}" onchange="_stats[${i}].label=this.value" style="padding:.5rem .7rem;border:1.5px solid var(--faint);border-radius:4px;font-size:.85rem;outline:none;width:100%;" />
+      </div>
+    </div>`).join('');
+}
+
+async function saveStats() {
+  const updates = _stats.map(s => db.from('stats').update({ value: s.value, label: s.label }).eq('id', s.id));
+  const results = await Promise.all(updates);
+  const err = results.find(r => r.error);
+  err ? toast('Error: ' + err.error.message, 'error') : toast('✓ Stats saved!');
+}
+</script>
+</body>
+</html>
