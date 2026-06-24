@@ -107,10 +107,11 @@ function renderArticles(articles, container, filterBar) {
 function renderExperience(entries, container) {
   if (!container) return;
   container.innerHTML = entries.map(e => {
-    const bullets = (e.bullets || '').split('\n').filter(Boolean)
+    const desc = e.description || e.bullets || '';
+    const bullets = desc.split('\n').filter(Boolean)
       .map(b => `<li>${b.trim()}</li>`).join('');
-    const tags = (e.tags || '').split(',').filter(Boolean)
-      .map(t => `<span class="exp-tag">${t.trim()}</span>`).join('');
+    const tagsArr = Array.isArray(e.tags) ? e.tags : (e.tags||'').split(',').filter(Boolean);
+    const tags = tagsArr.map(t => `<span class="exp-tag">${t.trim()}</span>`).join('');
     const now = e.is_current ? '<span class="now-pill">NOW</span>' : '';
     return `
       <div class="exp-item rv">
@@ -121,7 +122,7 @@ function renderExperience(entries, container) {
         </div>
         <div class="exp-r">
           <div class="exp-role">${e.role}</div>
-          <div class="exp-desc">${bullets ? `<ul>${bullets}</ul>` : (e.description || '')}</div>
+          <div class="exp-desc">${bullets ? `<ul>${bullets}</ul>` : desc}</div>
           ${tags ? `<div class="exp-tags">${tags}</div>` : ''}
         </div>
       </div>`;
