@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experience — Samaira Talwar</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .tab-bar { display: flex; border-bottom: 2px solid var(--black); padding: 0 3rem; }
+    .tab-btn { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 1.1rem 1.8rem; border: none; background: transparent; color: var(--mid); cursor: pointer; position: relative; transition: color .25s; }
+    .tab-btn::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--coral); transform: scaleX(0); transition: transform .3s; }
+    .tab-btn.active { color: var(--black); }
+    .tab-btn.active::after { transform: scaleX(1); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .exp-list { max-width: 900px; }
+    .exp-item { display: grid; grid-template-columns: 180px 1fr; gap: 4rem; padding: 3rem 0; border-bottom: 1px solid var(--faint); }
+    .exp-item:first-child { border-top: 1px solid var(--faint); }
+    .exp-org { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--black); margin-bottom: .3rem; }
+    .exp-date { font-size: .7rem; color: #aaa; line-height: 1.5; }
+    .exp-type { font-size: .65rem; color: #ccc; margin-top: .2rem; }
+    .now-pill { display: inline-block; font-size: .55rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--lime); color: var(--black); padding: .12rem .5rem; border-radius: 100px; margin-left: .4rem; vertical-align: middle; line-height: 1.6; }
+    .exp-role { font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: .9rem; line-height: 1.15; }
+    .exp-desc { font-size: .85rem; color: var(--mid); line-height: 1.8; }
+    .exp-desc ul { padding-left: 1.1rem; }
+    .exp-desc li { margin-bottom: .3rem; }
+    .exp-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+    .exp-tag { font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: .28rem .75rem; background: var(--off); color: var(--mid); border-radius: 100px; transition: all .2s; }
+    .exp-tag:hover { background: var(--coral); color: #fff; }
+
+    .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 900px; }
+    .cert-card { padding: 2rem; border: 1.5px solid var(--faint); transition: border-color .25s, background .25s; }
+    .cert-card:hover { border-color: var(--coral); background: #fff5f3; }
+    .cert-name { font-family: 'EB Garamond', serif; font-size: 1.15rem; margin-bottom: .3rem; }
+    .cert-issuer { font-size: .78rem; color: var(--mid); margin-bottom: .2rem; }
+    .cert-date { font-size: .7rem; color: #aaa; }
+    .cert-placeholder { padding: 2rem; border: 1.5px dashed var(--faint); color: #ccc; font-size: .8rem; font-style: italic; }
+    .loading { padding: 4rem 0; text-align: center; color: var(--mid); font-size: .9rem; }
+
+    @media (max-width: 768px) {
+      .tab-bar { padding: 0 1.5rem; overflow-x: auto; }
+      .exp-item { grid-template-columns: 1fr; gap: 1rem; }
+      .cert-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Samaira Talwar</a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="writing.html">Writing</a></li>
+    <li><a href="experience.html" class="active">Experience</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-tag rv">Work · Volunteer · Certifications</p>
+  <h1 class="rv"><em>Experience</em></h1>
+  <p class="page-hero-sub rv">Roles across journalism, education, design, community work, and counselling — and counting.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="work">Work</button>
+  <button class="tab-btn" data-tab="volunteer">Volunteer</button>
+  <button class="tab-btn" data-tab="certs">Certifications</button>
+</div>
+
+<div class="tab-panel active sec" id="tab-work">
+  <div class="exp-list" id="work-list">
+    <div class="exp-item rv"><div><div class="exp-org">The Phoenix News <span class="now-pill">NOW</span></div><div class="exp-date">May 2026 – Present</div></div><div><div class="exp-role">Editor-in-Chief</div><div class="exp-desc"><p>Leading the full editorial operation of UBCO's student newspaper. Oversee a team of writers, photographers, and designers through every issue cycle — from story pitching to final layout approval.</p></div><div class="exp-tags"><span class="exp-tag">Editorial Leadership</span><span class="exp-tag">Team Management</span><span class="exp-tag">Publishing</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">The Phoenix News</div><div class="exp-date">Apr 2025 – May 2026</div></div><div><div class="exp-role">Operations Manager</div><div class="exp-desc"><p>Managed editorial meetings, publication deadlines, advertiser relationships, and strategic planning. Kept the newsroom running on time and on brand.</p></div><div class="exp-tags"><span class="exp-tag">Operations</span><span class="exp-tag">Strategy</span><span class="exp-tag">Advertising</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">The Phoenix News</div><div class="exp-date">Jan 2025 – Apr 2025</div></div><div><div class="exp-role">Science & Tech Writer</div><div class="exp-desc"><p>Wrote 12 published articles spanning science, technology, politics, arts, sports, and campus life. Met weekly deadlines while conducting original research and interviews.</p></div><div class="exp-tags"><span class="exp-tag">Journalism</span><span class="exp-tag">Research</span><span class="exp-tag">Copy Editing</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">The Phoenix News</div><div class="exp-date">Jan 2024 – Jan 2025</div></div><div><div class="exp-role">Social Media Manager</div><div class="exp-desc"><p>Grew the publication's social media audience by 70% through a data-driven content strategy. Created graphics, scheduled posts, and tracked performance across platforms.</p></div><div class="exp-tags"><span class="exp-tag">Social Media</span><span class="exp-tag">Canva</span><span class="exp-tag">Content Strategy</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">UBC Okanagan <span class="now-pill">NOW</span></div><div class="exp-date">Sep 2024 – Present</div></div><div><div class="exp-role">RACP Peer Mentor Coordinator</div><div class="exp-desc"><p>Facilitated 135 mentorship matches between first-year and upper-year students. Planned orientation events, trained peer mentors, and managed the program's communication strategy.</p></div><div class="exp-tags"><span class="exp-tag">Mentorship</span><span class="exp-tag">Event Planning</span><span class="exp-tag">Community Building</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">UBC Okanagan <span class="now-pill">NOW</span></div><div class="exp-date">Sep 2024 – Present</div></div><div><div class="exp-role">Residence Advisor</div><div class="exp-desc"><p>Supported a floor of 40+ first-year students through academic, social, and personal challenges. Organized community events and served as a first point of contact for conflict resolution and wellness referrals.</p></div><div class="exp-tags"><span class="exp-tag">Peer Counselling</span><span class="exp-tag">Conflict Resolution</span><span class="exp-tag">Crisis Support</span></div></div></div>
+    <div class="exp-item rv"><div><div class="exp-org">Inkelt Innovations</div><div class="exp-date">Jun 2023 – Sep 2023</div></div><div><div class="exp-role">Graphic Design Intern</div><div class="exp-desc"><p>Designed marketing collateral, social assets, and UI mockups for client projects. Collaborated with the product and marketing teams in an agile environment.</p></div><div class="exp-tags"><span class="exp-tag">Graphic Design</span><span class="exp-tag">Adobe Suite</span><span class="exp-tag">Marketing</span></div></div></div>
+  </div>
+</div>
+<div class="tab-panel sec" id="tab-volunteer">
+  <div class="exp-list" id="vol-list">
+    <div class="exp-item rv"><div><div class="exp-org">Zeal NGO</div><div class="exp-date">2021 – 2023</div></div><div><div class="exp-role">Co-Founder & Director</div><div class="exp-desc"><p>Co-founded a youth-led non-profit focused on education access and community development. Led fundraising, outreach campaigns, and partnership development with local organizations.</p></div><div class="exp-tags"><span class="exp-tag">Non-Profit</span><span class="exp-tag">Fundraising</span><span class="exp-tag">Outreach</span></div></div></div>
+  </div>
+</div>
+<div class="tab-panel sec" id="tab-certs">
+  <span class="sec-label">Certifications &amp; Training</span>
+  <div class="cert-grid" id="cert-grid">
+    <div class="cert-card rv"><div class="cert-name">Mental Health First Aid</div><div class="cert-issuer">Mental Health Commission of Canada</div><div class="cert-date">2024</div></div>
+    <div class="cert-card rv"><div class="cert-name">SafeTALK Suicide Prevention</div><div class="cert-issuer">LivingWorks</div><div class="cert-date">2024</div></div>
+    <div class="cert-card rv"><div class="cert-name">WHMIS 2015</div><div class="cert-issuer">Canadian Centre for Occupational Health and Safety</div><div class="cert-date">2023</div></div>
+    <div class="cert-card rv"><div class="cert-name">Google Analytics Fundamentals</div><div class="cert-issuer">Google</div><div class="cert-date">2024</div></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span>© 2026 Samaira Talwar</span>
+  <a href="contact.html">Open to opportunities →</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/cms.js"></script>
+<script src="main.js"></script>
+<script>
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  (async () => {
+    try {
+      const [work, vol, certs] = await Promise.all([
+        cmsExperience('work'), cmsExperience('volunteer'), cmsCertifications()
+      ]);
+      if (work?.length)  renderExperience(work,  document.getElementById('work-list'));
+      if (vol?.length)   renderExperience(vol,   document.getElementById('vol-list'));
+      if (certs?.length) renderCertifications(certs, document.getElementById('cert-grid'));
+    } catch(e) { /* shows hardcoded fallback */ }
+  })();
+</script>
+</body>
+</html>

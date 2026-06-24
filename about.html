@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Samaira Talwar</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .about-body p { font-size: .93rem; line-height: 1.85; color: var(--mid); margin-bottom: 1.4rem; }
+    .about-body strong { color: var(--black); font-weight: 500; }
+    .pullquote { font-family: 'EB Garamond', serif; font-size: 1.55rem; font-style: italic; color: var(--black); line-height: 1.3; margin-bottom: 2rem; border-left: 3px solid var(--coral); padding-left: 1.5rem; }
+    .mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+    .mini-stat { padding: 1.4rem; border: 1px solid var(--faint); transition: border-color .25s; }
+    .mini-stat:hover { border-color: var(--coral); }
+    .mini-stat-num { font-family: 'EB Garamond', serif; font-size: 2.6rem; color: var(--coral); line-height: 1; }
+    .mini-stat-lbl { font-size: .72rem; color: var(--mid); margin-top: .3rem; line-height: 1.4; }
+    .lang-heading { font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--coral); margin-bottom: 1.5rem; }
+    .lang-list { display: flex; flex-direction: column; gap: 1.1rem; }
+    .lang-row { display: flex; align-items: center; gap: 1.2rem; }
+    .lang-name { font-size: .82rem; font-weight: 500; min-width: 90px; }
+    .lang-bar { flex: 1; height: 3px; background: var(--faint); border-radius: 100px; overflow: hidden; }
+    .lang-fill { height: 100%; border-radius: 100px; transition: width 1.3s cubic-bezier(.25,.46,.45,.94); }
+    .lang-level { font-size: .65rem; color: #aaa; min-width: 90px; text-align: right; }
+    .values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--faint); }
+    .value-card { background: var(--cream); padding: 2.5rem 2rem; transition: background .25s; }
+    .value-card:hover { background: var(--off); }
+    .v-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .v-title { font-family: 'EB Garamond', serif; font-size: 1.3rem; margin-bottom: .6rem; }
+    .v-title em { font-style: italic; }
+    .v-body { font-size: .8rem; color: var(--mid); line-height: 1.7; }
+    .edu-block { margin-top: 4rem; padding: 2.5rem; border: 1.5px solid var(--faint); transition: border-color .25s; }
+    .edu-block:hover { border-color: var(--coral); }
+    .edu-degree { font-family: 'EB Garamond', serif; font-size: 1.5rem; margin-bottom: .4rem; }
+    .edu-school { font-size: .85rem; color: var(--mid); margin-bottom: .2rem; }
+    .edu-detail { font-size: .78rem; color: #aaa; }
+    .skill-section { margin-top: 3rem; }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .chip { font-size: .7rem; font-weight: 500; letter-spacing: .06em; padding: .5rem 1.1rem; border: 1.5px solid var(--faint); color: var(--mid); border-radius: 100px; transition: all .22s; cursor: default; }
+    .chip:hover { background: var(--black); color: var(--cream); border-color: var(--black); }
+    @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 3rem; } .values-grid { grid-template-columns: 1fr; } .mini-stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Samaira Talwar</a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="writing.html">Writing</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-tag rv">Who I am</p>
+  <h1 class="rv">About <em>me</em></h1>
+  <p class="page-hero-sub rv" id="about-sub">Economist, journalist, mentor, and community builder — making things happen at UBC Okanagan and beyond.</p>
+</div>
+
+<section class="sec">
+  <div class="about-grid">
+    <div class="about-body rv">
+      <p class="pullquote">"I thrive at the intersection of leadership, storytelling, and strategic thinking."</p>
+      <p id="bio-1">I'm <strong>Samaira Talwar</strong> — a third-year Economics student at UBC Okanagan with a Pre-Law focus and a long track record of actually doing things. I don't wait to have the title before stepping up.</p>
+      <p id="bio-2">At The Phoenix News, I started as a Social Media Manager in 2024, grew their audience by 70%, moved into Operations, started writing, and by 2026 I was Editor-in-Chief — managing the full editorial cycle for a real publication read across campus.</p>
+      <p id="bio-3">My instinct is always toward: <em>What does this community need, and how do I build it?</em> Whether that's an editorial calendar, a mentorship program, or a conflict resolution conversation — I figure it out.</p>
+      <div class="edu-block rv" id="edu-block">
+        <div class="edu-degree" id="edu-degree">Bachelor of Arts — Economics</div>
+        <div class="edu-school" id="edu-school">University of British Columbia Okanagan</div>
+        <div class="edu-detail" id="edu-detail">2023 – Present · Third Year · Pre-Law Track</div>
+      </div>
+    </div>
+    <div>
+      <div class="mini-stats rv">
+        <div class="mini-stat"><div class="mini-stat-num">9</div><div class="mini-stat-lbl">Roles across journalism, education, design & community</div></div>
+        <div class="mini-stat"><div class="mini-stat-num">12</div><div class="mini-stat-lbl">Published articles in 5 editorial sections</div></div>
+        <div class="mini-stat"><div class="mini-stat-num">135</div><div class="mini-stat-lbl">Mentorship matches facilitated as RACP Coordinator</div></div>
+        <div class="mini-stat"><div class="mini-stat-num">70%</div><div class="mini-stat-lbl">Audience growth driven as Social Media Manager</div></div>
+      </div>
+      <div class="lang-section rv">
+        <div class="lang-heading">Languages</div>
+        <div class="lang-list" id="lang-list">
+          <div class="lang-row"><span class="lang-name">English</span><div class="lang-bar"><div class="lang-fill" style="width:100%;background:var(--coral)"></div></div><span class="lang-level">Native</span></div>
+          <div class="lang-row"><span class="lang-name">Hindi</span><div class="lang-bar"><div class="lang-fill" style="width:100%;background:var(--coral)"></div></div><span class="lang-level">Fluent</span></div>
+          <div class="lang-row"><span class="lang-name">French</span><div class="lang-bar"><div class="lang-fill" style="width:95%;background:var(--coral)"></div></div><span class="lang-level">Fluent</span></div>
+          <div class="lang-row"><span class="lang-name">Spanish</span><div class="lang-bar"><div class="lang-fill" style="width:60%;background:var(--black)"></div></div><span class="lang-level">Intermediate</span></div>
+          <div class="lang-row"><span class="lang-name">Korean</span><div class="lang-bar"><div class="lang-fill" style="width:35%;background:var(--black)"></div></div><span class="lang-level">Elementary</span></div>
+          <div class="lang-row"><span class="lang-name">Mandarin</span><div class="lang-bar"><div class="lang-fill" style="width:20%;background:var(--black)"></div></div><span class="lang-level">Beginner</span></div>
+        </div>
+      </div>
+      <div class="skill-section rv">
+        <div class="lang-heading" style="margin-top:2.5rem;">Skills</div>
+        <div class="skills-wrap" id="skills-wrap">
+          <span class="chip">Editorial Leadership</span><span class="chip">Journalism</span><span class="chip">Content Strategy</span><span class="chip">Social Media</span><span class="chip">Public Speaking</span><span class="chip">Research & Analysis</span><span class="chip">Canva</span><span class="chip">Adobe Suite</span><span class="chip">Microsoft Office</span><span class="chip">Event Planning</span><span class="chip">Community Outreach</span><span class="chip">Conflict Resolution</span><span class="chip">Mentorship</span><span class="chip">SEO</span><span class="chip">Copy Editing</span><span class="chip">Legal Research</span><span class="chip">Peer Counselling</span><span class="chip">Data Analysis</span><span class="chip">Stakeholder Communication</span><span class="chip">Team Management</span><span class="chip">Photography</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:0;">
+  <span class="sec-label rv">How I work</span>
+  <div class="values-grid">
+    <div class="value-card rv"><div class="v-icon">✍️</div><div class="v-title">I write to <em>clarify</em></div><p class="v-body">Before I write anything for others, I write to understand it myself. Precision in language is precision in thinking — and that's what I bring to every editorial, report, or email.</p></div>
+    <div class="value-card rv"><div class="v-icon">🏗️</div><div class="v-title">I build <em>systems</em></div><p class="v-body">Whether it's a mentorship program, an editorial calendar, or a social media strategy — I don't just participate in structures, I create them. And I make sure they keep running.</p></div>
+    <div class="value-card rv"><div class="v-icon">🤝</div><div class="v-title">I lead by <em>listening</em></div><p class="v-body">I've advised residents, counselled students, and mediated conflicts. I know that leadership starts with understanding what someone actually needs — and then doing something about it.</p></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <span>© 2026 Samaira Talwar</span>
+  <a href="contact.html">Get in touch →</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/cms.js"></script>
+<script src="main.js"></script>
+<script>
+  (async () => {
+    try {
+      const [profile, langs, skills] = await Promise.all([
+        cmsProfile(), cmsLanguages(), cmsSkills()
+      ]);
+      if (profile) {
+        if (profile.bio_about)   document.getElementById('bio-1').innerHTML = profile.bio_about;
+        if (profile.bio_about_2) document.getElementById('bio-2').innerHTML = profile.bio_about_2;
+        if (profile.bio_about_3) document.getElementById('bio-3').innerHTML = profile.bio_about_3;
+        if (profile.degree)      document.getElementById('edu-degree').textContent = profile.degree;
+        if (profile.university)  document.getElementById('edu-school').textContent = profile.university;
+        if (profile.year)        document.getElementById('edu-detail').textContent = `2023 – Present · ${profile.year}`;
+      }
+      renderLanguages(langs, document.getElementById('lang-list'));
+      renderSkills(skills, document.getElementById('skills-wrap'));
+    } catch(e) { /* falls back to hardcoded */ }
+  })();
+</script>
+</body>
+</html>

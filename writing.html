@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing — Samaira Talwar</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; padding: 2rem 3rem; border-bottom: 1px solid var(--faint); }
+    .filter-btn { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .4rem 1rem; border-radius: 100px; border: 1.5px solid var(--faint); background: transparent; color: var(--mid); cursor: pointer; transition: all .22s; }
+    .filter-btn:hover, .filter-btn.active { background: var(--black); color: var(--cream); border-color: var(--black); }
+    .art-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--faint); }
+    .art-card { background: var(--cream); padding: 2.5rem 2.2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px; position: relative; transition: background .28s; }
+    .art-card:hover { background: var(--black); }
+    .art-card:hover .art-cat { color: var(--lime); }
+    .art-card:hover .art-title { color: var(--cream); font-style: italic; }
+    .art-card:hover .art-meta { color: rgba(255,255,255,.35); }
+    .art-cat { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .8rem; transition: color .28s; }
+    .art-title { font-family: 'EB Garamond', serif; font-size: 1.25rem; line-height: 1.3; flex: 1; transition: color .28s, font-style .2s; }
+    .art-meta { font-size: .7rem; color: #aaa; margin-top: 1.4rem; transition: color .28s; }
+    .art-arrow { position: absolute; bottom: 1.4rem; right: 1.4rem; font-size: 1rem; color: var(--faint); transition: all .28s; }
+    .art-card:hover .art-arrow { color: var(--coral); transform: translate(3px,-3px); }
+    .art-card.featured { grid-column: span 2; min-height: 300px; }
+    .art-card.featured .art-title { font-size: 1.8rem; }
+    .loading { padding: 4rem 3rem; text-align: center; color: var(--mid); font-size: .9rem; }
+    @media (max-width: 900px) { .filter-bar { padding: 1.5rem; } .art-grid { grid-template-columns: 1fr 1fr; } .art-card.featured { grid-column: span 2; } }
+    @media (max-width: 580px) { .art-grid { grid-template-columns: 1fr; } .art-card.featured { grid-column: span 1; } }
+  </style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Samaira Talwar</a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="writing.html" class="active">Writing</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-tag rv">The Phoenix News</p>
+  <h1 class="rv">My <em>writing</em></h1>
+  <p class="page-hero-sub rv" id="art-count">Published articles across science, politics, arts, sports, and campus life.</p>
+</div>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-btn active" data-cat="all">All</button>
+</div>
+<div class="art-grid" id="art-grid">
+  <a class="art-card featured rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Quiet Revolution: How AI is Reshaping the Modern Classroom</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">UBCO's Housing Crisis: Students Speak Out</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Generation Z and the Politics of Apathy</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">The Art of Letting Go: A Review of UBCO's Spring Exhibition</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">CRISPR at the Crossroads: Ethics and the Gene-Editing Debate</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">Heat on the Court: UBCO Women's Basketball Season Recap</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">Mental Health Services at UBCO: Are They Enough?</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Unpacking the Federal Budget: What It Means for Students</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Dark Side of Social Media Algorithms</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">Reading Between the Lines: The Resurgence of Campus Literary Clubs</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">From the Bench to the Field: Student Athletes on Balance</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
+  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">First-Year Survival Guide: What Nobody Told You</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
+</div>
+
+<footer class="site-footer">
+  <span>© 2026 Samaira Talwar</span>
+  <a href="https://thephoenixnews.com/author/samaira-talwar" target="_blank">View on The Phoenix News ↗</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/cms.js"></script>
+<script src="main.js"></script>
+<script>
+  (async () => {
+    try {
+      const articles = await cmsArticles();
+      if (articles?.length) {
+        document.getElementById('art-count').textContent =
+          `${articles.length} articles across 5 editorial sections — The Phoenix News`;
+        renderArticles(articles, document.getElementById('art-grid'), document.getElementById('filter-bar'));
+      }
+    } catch(e) { /* shows hardcoded fallback */ }
+  })();
+</script>
+</body>
+</html>
