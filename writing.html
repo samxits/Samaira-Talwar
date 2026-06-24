@@ -6,52 +6,63 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    /* ── TAB BAR ── */
+    .tab-bar {
+      display: flex;
+      border-bottom: 2px solid var(--black);
+      padding: 0 3rem;
+    }
+    .tab-btn {
+      font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      padding: 1.1rem 2rem; border: none; background: transparent;
+      color: var(--mid); cursor: pointer; transition: color .2s;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+    }
+    .tab-btn:hover { color: var(--black); }
+    .tab-btn.active { color: var(--black); border-bottom-color: var(--coral); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CASE STUDIES ── */
     .cs-grid { display: flex; flex-direction: column; gap: 2px; background: var(--faint); }
-    .cs-item { background: var(--cream); display: grid; grid-template-columns: 1fr 1.6fr; gap: 0; }
-    .cs-item:nth-child(even) { grid-template-columns: 1.6fr 1fr; }
-    .cs-item:nth-child(even) .cs-meta { order: 2; }
-    .cs-item:nth-child(even) .cs-body { order: 1; }
-    .cs-meta { padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--faint); }
-    .cs-item:nth-child(even) .cs-meta { border-right: none; border-left: 1px solid var(--faint); }
-    .cs-num { font-family: 'EB Garamond', serif; font-size: 5rem; color: var(--faint); line-height: 1; }
-    .cs-tag { font-size: .6rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--coral); margin-bottom: .6rem; }
-    .cs-org { font-size: .75rem; color: #aaa; margin-top: auto; }
-    .cs-body { padding: 4rem 3rem; }
-    .cs-title { font-family: 'EB Garamond', serif; font-size: clamp(1.6rem, 2.5vw, 2.4rem); line-height: 1.1; margin-bottom: 1.5rem; }
+    .cs-item { background: var(--cream); display: grid; grid-template-columns: 240px 1fr; }
+    .cs-meta { padding: 3.5rem 2.5rem; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--faint); }
+    .cs-num { font-family: 'EB Garamond', serif; font-size: 4.5rem; color: var(--faint); line-height: 1; }
+    .cs-tag { font-size: .58rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .4rem; margin-top: 1.5rem; }
+    .cs-org { font-size: .72rem; color: #aaa; }
+    .cs-body { padding: 3.5rem 3rem; }
+    .cs-title { font-family: 'EB Garamond', serif; font-size: clamp(1.5rem, 2.2vw, 2.1rem); line-height: 1.15; margin-bottom: 1.8rem; }
     .cs-title em { font-style: italic; color: var(--coral); }
-    .cs-problem { font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mid); margin-bottom: .4rem; }
-    .cs-text { font-size: .9rem; color: var(--mid); line-height: 1.8; margin-bottom: 1.5rem; }
-    .cs-results { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--faint); }
-    .cs-result { display: flex; flex-direction: column; }
-    .cs-result-num { font-family: 'EB Garamond', serif; font-size: 2rem; color: var(--black); line-height: 1; }
-    .cs-result-lbl { font-size: .68rem; color: #aaa; margin-top: .2rem; }
+    .cs-label { font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); margin-bottom: .4rem; }
+    .cs-text { font-size: .88rem; color: var(--mid); line-height: 1.8; margin-bottom: 1.4rem; }
+    .cs-results { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 1.8rem; padding-top: 1.5rem; border-top: 1px solid var(--faint); }
+    .cs-result-num { font-family: 'EB Garamond', serif; font-size: 1.9rem; color: var(--black); line-height: 1; }
+    .cs-result-lbl { font-size: .65rem; color: #aaa; margin-top: .2rem; }
 
-    .divider { padding: 3rem; border-top: 1px solid var(--faint); }
-    .divider-label { font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--coral); margin-bottom: .5rem; }
-    .divider-head { font-family: 'EB Garamond', serif; font-size: 1.4rem; }
-
+    /* ── ARTICLES ── */
     .filter-bar { display: flex; gap: .5rem; flex-wrap: wrap; padding: 2rem 3rem; border-bottom: 1px solid var(--faint); }
-    .filter-btn { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .4rem 1rem; border-radius: 100px; border: 1.5px solid var(--faint); background: transparent; color: var(--mid); cursor: pointer; transition: all .22s; }
+    .filter-btn { font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .4rem 1rem; border-radius: 100px; border: 1.5px solid var(--faint); background: transparent; color: var(--mid); cursor: pointer; transition: all .22s; }
     .filter-btn:hover, .filter-btn.active { background: var(--black); color: var(--cream); border-color: var(--black); }
     .art-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--faint); }
-    .art-card { background: var(--cream); padding: 2.5rem 2.2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; position: relative; transition: background .28s; }
+    .art-card { background: var(--cream); padding: 2.2rem 2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 200px; position: relative; transition: background .28s; }
     .art-card:hover { background: var(--black); }
     .art-card:hover .art-cat { color: var(--lime); }
     .art-card:hover .art-title { color: var(--cream); font-style: italic; }
     .art-card:hover .art-meta { color: rgba(255,255,255,.35); }
-    .art-cat { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .8rem; transition: color .28s; }
-    .art-title { font-family: 'EB Garamond', serif; font-size: 1.15rem; line-height: 1.3; flex: 1; transition: color .28s; }
-    .art-meta { font-size: .7rem; color: #aaa; margin-top: 1.2rem; transition: color .28s; }
-    .art-arrow { position: absolute; bottom: 1.4rem; right: 1.4rem; font-size: 1rem; color: var(--faint); transition: all .28s; }
+    .art-cat { font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: .7rem; transition: color .28s; }
+    .art-title { font-family: 'EB Garamond', serif; font-size: 1.1rem; line-height: 1.3; flex: 1; transition: color .28s; }
+    .art-meta { font-size: .68rem; color: #aaa; margin-top: 1rem; transition: color .28s; }
+    .art-arrow { position: absolute; bottom: 1.2rem; right: 1.2rem; font-size: .9rem; color: var(--faint); transition: all .28s; }
     .art-card:hover .art-arrow { color: var(--coral); transform: translate(3px,-3px); }
-    .art-card.featured { grid-column: span 2; min-height: 280px; }
-    .art-card.featured .art-title { font-size: 1.6rem; }
+    .art-card.featured { grid-column: span 2; min-height: 260px; }
+    .art-card.featured .art-title { font-size: 1.5rem; }
 
     @media (max-width: 860px) {
-      .cs-item, .cs-item:nth-child(even) { grid-template-columns: 1fr; }
-      .cs-item:nth-child(even) .cs-meta, .cs-item:nth-child(even) .cs-body { order: unset; }
-      .cs-meta { border-right: none; border-bottom: 1px solid var(--faint); padding: 2.5rem 1.5rem; }
-      .cs-body { padding: 2.5rem 1.5rem; }
+      .tab-bar { padding: 0 1.5rem; }
+      .cs-item { grid-template-columns: 1fr; }
+      .cs-meta { border-right: none; border-bottom: 1px solid var(--faint); padding: 2rem 1.5rem; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 1rem; }
+      .cs-num { font-size: 3rem; }
+      .cs-body { padding: 2rem 1.5rem; }
       .filter-bar { padding: 1.5rem; }
       .art-grid { grid-template-columns: 1fr; }
       .art-card.featured { grid-column: span 1; }
@@ -71,103 +82,108 @@
 </nav>
 
 <div class="page-hero">
-  <p class="page-hero-tag rv">Selected projects</p>
+  <p class="page-hero-tag rv">Portfolio</p>
   <h1 class="rv">The <em>work</em></h1>
-  <p class="page-hero-sub rv">Three things I built that didn't exist before I showed up.</p>
+  <p class="page-hero-sub rv">Case studies and published writing.</p>
 </div>
 
-<div class="cs-grid" id="cs-grid">
-  <!-- Case Study 1 -->
-  <div class="cs-item rv">
-    <div class="cs-meta">
-      <div class="cs-num">01</div>
-      <div>
-        <div class="cs-tag">Growth Strategy</div>
-        <div class="cs-org">The Phoenix News · 2024</div>
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="casestudies">Case Studies</button>
+  <button class="tab-btn" data-tab="writing">Writing</button>
+</div>
+
+<!-- CASE STUDIES TAB -->
+<div class="tab-panel active" id="tab-casestudies">
+  <div class="cs-grid" id="cs-grid">
+
+    <div class="cs-item rv">
+      <div class="cs-meta">
+        <div class="cs-num">01</div>
+        <div>
+          <div class="cs-tag">Design · Community</div>
+          <div class="cs-org">KCR Community Resources · 2024</div>
+        </div>
+      </div>
+      <div class="cs-body">
+        <div class="cs-title">Turning <em>life stories</em> into something families keep forever</div>
+        <div class="cs-label">The context</div>
+        <p class="cs-text">KCR Community Resources runs programs for families navigating difficult circumstances — foster care, trauma, transition. The Lifebook program helps children and youth process their histories through a personalized memory book. The design needed to feel warm, accessible, and meaningful — not clinical.</p>
+        <div class="cs-label">What I did</div>
+        <p class="cs-text">I designed Lifebooks that translated each child's unique story into a cohesive, visually engaging keepsake. That meant collaborating with caseworkers to understand each person's background, making deliberate layout and visual choices to reflect personality, and producing something that could be handed to a family and understood immediately — no explanation needed.</p>
+        <div class="cs-results">
+          <div><div class="cs-result-num">100%</div><div class="cs-result-lbl">Custom per person</div></div>
+          <div><div class="cs-result-num">↑</div><div class="cs-result-lbl">Design for emotional impact</div></div>
+          <div><div class="cs-result-num">KCR</div><div class="cs-result-lbl">Community non-profit</div></div>
+        </div>
       </div>
     </div>
-    <div class="cs-body">
-      <div class="cs-title">From invisible to <em>unmissable</em> — growing a student publication's audience by 70%</div>
-      <div class="cs-problem">The problem</div>
-      <p class="cs-text">The Phoenix News had a social media presence that looked like an afterthought — sporadic posts, generic campus-news content, no personality. Engagement was flat and follower growth had stalled. Nobody was paying attention.</p>
-      <div class="cs-problem">What I did</div>
-      <p class="cs-text">I scrapped the existing approach and rebuilt the content strategy from scratch. Instead of pushing every article, I created content formats students actually engaged with: opinion polls, behind-the-scenes newsroom content, trending audio reels, and fast-turnaround reactions to campus events. I tracked performance weekly, killed what wasn't working, and doubled down on what was. Within weeks, the data was clear — personality and speed beat polish and volume every time.</p>
-      <div class="cs-results">
-        <div class="cs-result"><span class="cs-result-num">70%</span><span class="cs-result-lbl">Audience growth</span></div>
-        <div class="cs-result"><span class="cs-result-num">1yr</span><span class="cs-result-lbl">Time to results</span></div>
-        <div class="cs-result"><span class="cs-result-num">↑3×</span><span class="cs-result-lbl">Engagement rate</span></div>
+
+    <div class="cs-item rv">
+      <div class="cs-meta">
+        <div class="cs-num">02</div>
+        <div>
+          <div class="cs-tag">Editorial · Leadership · Product</div>
+          <div class="cs-org">The Phoenix News · 2026</div>
+        </div>
+      </div>
+      <div class="cs-body">
+        <div class="cs-title">Relaunching a student newsroom — new site, <em>first magazine</em>, zero budget</div>
+        <div class="cs-label">The context</div>
+        <p class="cs-text">When I became Editor-in-Chief, The Phoenix News had an outdated website, no print presence, and an editorial process that ran on goodwill. The publication needed to operate like a real newsroom — not a student club.</p>
+        <div class="cs-label">What I did</div>
+        <p class="cs-text">I rebuilt the website from scratch, restructured the editorial calendar so deadlines were actually met, and launched the publication's first-ever print magazine — coordinating design, editorial, and production simultaneously. I also grew the social media audience by 70% as Social Media Manager before taking the top role — so I understood the publication inside out before I ever had the title.</p>
+        <div class="cs-results">
+          <div><div class="cs-result-num">1st</div><div class="cs-result-lbl">Print magazine ever</div></div>
+          <div><div class="cs-result-num">70%</div><div class="cs-result-lbl">Audience growth</div></div>
+          <div><div class="cs-result-num">$0</div><div class="cs-result-lbl">Budget</div></div>
+        </div>
       </div>
     </div>
+
+    <div class="cs-item rv">
+      <div class="cs-meta">
+        <div class="cs-num">03</div>
+        <div>
+          <div class="cs-tag">Program Design · Community</div>
+          <div class="cs-org">UBC Okanagan Res Life · 2025</div>
+        </div>
+      </div>
+      <div class="cs-body">
+        <div class="cs-title">Building a residence community that <em>actually felt like one</em></div>
+        <div class="cs-label">The context</div>
+        <p class="cs-text">Living in residence is supposed to be a formative experience — but without intentional programming, it defaults to isolation. As Initiatives Coordinator, I was responsible for building the events, structures, and touchpoints that made a floor of strangers feel like a community.</p>
+        <div class="cs-label">What I did</div>
+        <p class="cs-text">I designed and ran programming that met students where they were — not generic icebreakers, but events tailored to the specific mix of people on the floor, timed to the points in the year when students most needed connection (move-in week, midterms, exam season). I coordinated with Residence Life staff, managed logistics, and made sure every event had a clear purpose beyond "something to do."</p>
+        <div class="cs-results">
+          <div><div class="cs-result-num">↑</div><div class="cs-result-lbl">Retention & engagement</div></div>
+          <div><div class="cs-result-num">UBCO</div><div class="cs-result-lbl">Residence Life program</div></div>
+          <div><div class="cs-result-num">0→1</div><div class="cs-result-lbl">Built from scratch</div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 
-  <!-- Case Study 2 -->
-  <div class="cs-item rv">
-    <div class="cs-meta">
-      <div class="cs-num">02</div>
-      <div>
-        <div class="cs-tag">Program Design · Community</div>
-        <div class="cs-org">UBC Okanagan · 2024–Present</div>
-      </div>
-    </div>
-    <div class="cs-body">
-      <div class="cs-title">Building a mentorship program that <em>actually worked</em> — 135 matches and counting</div>
-      <div class="cs-problem">The problem</div>
-      <p class="cs-text">First-year students at UBCO were struggling to find their footing — overwhelmed by a new city, a new institution, and no real roadmap. The existing peer support structures were sparse and transactional. Students needed genuine connection with people who'd already figured it out.</p>
-      <div class="cs-problem">What I did</div>
-      <p class="cs-text">I designed and ran a mentorship matching program from the ground up. Built the application and matching process, trained upper-year mentors on how to actually be useful (not just available), planned orientation events that brought people together before the stress set in, and ran the communication strategy that kept participants engaged beyond week one. The goal wasn't just matches — it was relationships that lasted the year.</p>
-      <div class="cs-results">
-        <div class="cs-result"><span class="cs-result-num">135</span><span class="cs-result-lbl">Matches made</span></div>
-        <div class="cs-result"><span class="cs-result-num">40+</span><span class="cs-result-lbl">Mentors trained</span></div>
-        <div class="cs-result"><span class="cs-result-num">0→1</span><span class="cs-result-lbl">Built from scratch</span></div>
-      </div>
-    </div>
+<!-- WRITING TAB -->
+<div class="tab-panel" id="tab-writing">
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" data-cat="all">All</button>
   </div>
-
-  <!-- Case Study 3 -->
-  <div class="cs-item rv">
-    <div class="cs-meta">
-      <div class="cs-num">03</div>
-      <div>
-        <div class="cs-tag">Editorial Strategy · Product</div>
-        <div class="cs-org">The Phoenix News · 2026</div>
-      </div>
-    </div>
-    <div class="cs-body">
-      <div class="cs-title">Relaunching a student newsroom — new website, <em>first magazine</em>, zero budget</div>
-      <div class="cs-problem">The problem</div>
-      <p class="cs-text">When I became Editor-in-Chief, The Phoenix News had an outdated website that didn't reflect the quality of the journalism, no print presence, and an editorial process that ran on hope. The publication needed to look and operate like a real newsroom — not a student club.</p>
-      <div class="cs-problem">What I did</div>
-      <p class="cs-text">I rebuilt the website from scratch, restructured the editorial calendar so deadlines were actually met, and launched the publication's first-ever print magazine — coordinating design, editorial, and production simultaneously. Every decision was made without a budget and with a team of student volunteers. The result was a publication that finally looked as credible as the stories it was telling.</p>
-      <div class="cs-results">
-        <div class="cs-result"><span class="cs-result-num">1st</span><span class="cs-result-lbl">Print magazine ever</span></div>
-        <div class="cs-result"><span class="cs-result-num">↑</span><span class="cs-result-lbl">Site rebuilt from scratch</span></div>
-        <div class="cs-result"><span class="cs-result-num">£0</span><span class="cs-result-lbl">Budget</span></div>
-      </div>
-    </div>
+  <div class="art-grid" id="art-grid">
+    <a class="art-card featured rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Quiet Revolution: How AI is Reshaping the Modern Classroom</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">UBCO's Housing Crisis: Students Speak Out</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Generation Z and the Politics of Apathy</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">The Art of Letting Go: A Review of UBCO's Spring Exhibition</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">CRISPR at the Crossroads: Ethics and the Gene-Editing Debate</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">Heat on the Court: UBCO Women's Basketball Season Recap</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">Mental Health Services at UBCO: Are They Enough?</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Unpacking the Federal Budget: What It Means for Students</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Dark Side of Social Media Algorithms</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">Reading Between the Lines: The Resurgence of Campus Literary Clubs</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">From the Bench to the Field: Student Athletes on Balance</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
+    <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">First-Year Survival Guide: What Nobody Told You</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
   </div>
-</div>
-
-<div class="divider rv" style="padding:3rem 3rem 1.5rem;">
-  <div class="divider-label">Published writing</div>
-  <div class="divider-head">Articles — The Phoenix News</div>
-</div>
-
-<div class="filter-bar" id="filter-bar">
-  <button class="filter-btn active" data-cat="all">All</button>
-</div>
-<div class="art-grid" id="art-grid">
-  <a class="art-card featured rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Quiet Revolution: How AI is Reshaping the Modern Classroom</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">UBCO's Housing Crisis: Students Speak Out</div><div class="art-meta">The Phoenix News · 2026</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Generation Z and the Politics of Apathy</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">The Art of Letting Go: A Review of UBCO's Spring Exhibition</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">CRISPR at the Crossroads: Ethics and the Gene-Editing Debate</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">Heat on the Court: UBCO Women's Basketball Season Recap</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">Mental Health Services at UBCO: Are They Enough?</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Politics</div><div class="art-title">Unpacking the Federal Budget: What It Means for Students</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Science & Tech</div><div class="art-title">The Dark Side of Social Media Algorithms</div><div class="art-meta">The Phoenix News · 2025</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Arts & Culture</div><div class="art-title">Reading Between the Lines: The Resurgence of Campus Literary Clubs</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Sports</div><div class="art-title">From the Bench to the Field: Student Athletes on Balance</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
-  <a class="art-card rv" href="https://thephoenixnews.com" target="_blank"><div class="art-cat">Campus Life</div><div class="art-title">First-Year Survival Guide: What Nobody Told You</div><div class="art-meta">The Phoenix News · 2024</div><span class="art-arrow">↗</span></a>
 </div>
 
 <footer class="site-footer">
@@ -180,14 +196,21 @@
 <script src="js/cms.js"></script>
 <script src="main.js"></script>
 <script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
   (async () => {
     try {
       const [cs, articles] = await Promise.all([cmsCaseStudies(), cmsArticles()]);
       if (cs?.length) renderCaseStudies(cs, document.getElementById('cs-grid'));
-      if (articles?.length) {
-        renderArticles(articles, document.getElementById('art-grid'), document.getElementById('filter-bar'));
-      }
-    } catch(e) { /* shows hardcoded fallback */ }
+      if (articles?.length) renderArticles(articles, document.getElementById('art-grid'), document.getElementById('filter-bar'));
+    } catch(e) {}
   })();
 </script>
 </body>
