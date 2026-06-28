@@ -212,11 +212,19 @@
         <div class="form-group"><label>Paragraph 3</label><textarea id="p-bio-3" rows="3"></textarea></div>
       </div>
       <div class="card">
-        <div class="card-title">Contact & Links</div>
+        <div class="card-title">Contact Page Bio</div>
+        <div class="form-group"><small>The paragraph shown under "Let's work together" on the contact page.</small><textarea id="p-contact-bio" rows="4" style="margin-top:.5rem;"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contact Info & Links</div>
         <div class="form-row cols-3">
           <div class="form-group"><label>Email</label><input id="p-email" type="email" /></div>
           <div class="form-group"><label>LinkedIn URL</label><input id="p-linkedin" type="url" /></div>
           <div class="form-group"><label>Phoenix Author URL</label><input id="p-phoenix" type="url" /></div>
+        </div>
+        <div class="form-row cols-3" style="margin-top:1rem;">
+          <div class="form-group"><label>Location</label><input id="p-location-contact" type="text" placeholder="Kelowna, BC" /></div>
+          <div class="form-group"><label>Currently (footer strip)</label><input id="p-currently" type="text" placeholder="Editor-in-Chief, The Phoenix News" /></div>
         </div>
       </div>
       <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
@@ -434,9 +442,12 @@ async function loadProfile() {
   document.getElementById('p-bio-1').value    = data.bio_about || '';
   document.getElementById('p-bio-2').value    = data.bio_about_2 || '';
   document.getElementById('p-bio-3').value    = data.bio_about_3 || '';
-  document.getElementById('p-email').value    = data.email || '';
-  document.getElementById('p-linkedin').value = data.linkedin_url || '';
-  document.getElementById('p-phoenix').value  = data.phoenix_author_url || '';
+  document.getElementById('p-email').value          = data.email || '';
+  document.getElementById('p-linkedin').value       = data.linkedin_url || '';
+  document.getElementById('p-phoenix').value        = data.phoenix_author_url || '';
+  document.getElementById('p-contact-bio').value    = data.contact_bio || '';
+  document.getElementById('p-location-contact').value = data.location || '';
+  document.getElementById('p-currently').value      = data.currently || '';
 }
 
 async function saveProfile() {
@@ -455,6 +466,9 @@ async function saveProfile() {
     email: document.getElementById('p-email').value,
     linkedin_url: document.getElementById('p-linkedin').value,
     phoenix_author_url: document.getElementById('p-phoenix').value,
+    contact_bio: document.getElementById('p-contact-bio').value,
+    location: document.getElementById('p-location-contact').value,
+    currently: document.getElementById('p-currently').value,
   }).eq('id', 1);
   error ? toast('Error: ' + error.message, 'error') : toast('✓ Profile saved!');
 }
